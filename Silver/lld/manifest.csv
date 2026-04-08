@@ -20,3 +20,15 @@ NHNCK,ProfessionalHistories,Securities Practitioner Audit Log,ETL Pattern — Au
 NHNCK,Violations,Securities Practitioner Conduct Violation,[Business Activity] Conduct Violation,B,attr_NHNCK_Violations.csv,draft
 NHNCK,OrganizationReports,Securities Practitioner Organization Employment Report,[Documentation] Employer Registration,B,attr_NHNCK_OrganizationReports.csv,draft
 NHNCK,IdentityInfoC06s,Securities Practitioner Identity Verification Record,[Communication] Verification,B,attr_NHNCK_IdentityInfoC06s.csv,draft
+NHNCK,SpecializationCourses,Securities Practitioner Professional Training Class,[Event] Training Course,C,attr_NHNCK_SpecializationCourses.csv,draft
+NHNCK,SpecializationCourseDetails,Securities Practitioner Professional Training Class Enrollment,[Business Activity] Business Activity,C,attr_NHNCK_SpecializationCourseDetails.csv,draft
+NHNCK,ExamSessions,Securities Practitioner Qualification Examination Assessment,[Communication] Assessment,C,attr_NHNCK_ExamSessions.csv,draft
+NHNCK,ExamDetails,Securities Practitioner Qualification Examination Assessment Result,[Communication] Assessment,C,attr_NHNCK_ExamDetails.csv,draft
+NHNCK,ExamSessionFees,Securities Practitioner Qualification Examination Assessment Fee,[Condition] Financial Charge,C,attr_NHNCK_ExamSessionFees.csv,draft
+NHNCK,Organizations,Securities Organization Reference,[Involved Party] Organization,E,attr_NHNCK_Organizations.csv,draft
+NHNCK,Decisions,Securities Practitioner License Decision Document,[Documentation] Gov. Registration Document,E,attr_NHNCK_Decisions.csv,draft
+NHNCK,Units|Departments,Regulatory Authority Organization Unit,[Involved Party] Organization,E,attr_NHNCK_Units_Departments.csv,draft
+NHNCK,Users,Regulatory Authority Officer,[Involved Party] Individual,E,attr_NHNCK_Users.csv,draft
+NHNCK,Organizations,Involved Party Postal Address,Shared Entity,E,attr_NHNCK_Organizations_IP_Postal_Address.csv,draft
+NHNCK,Organizations,Involved Party Electronic Address,Shared Entity,E,attr_NHNCK_Organizations_IP_Electronic_Address.csv,draft
+NHNCK,Organizations,Involved Party Alternative Identification,Shared Entity,E,attr_NHNCK_Organizations_IP_Alt_Identification.csv,draft

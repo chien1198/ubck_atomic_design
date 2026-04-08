@@ -46,3 +46,18 @@ COUNTRY,(to_define),Quốc gia — cần xác nhận từ data (có thể dùng 
 CONDUCT_VIOLATION_TYPE,(to_define),Loại vi phạm (Pháp luật/Hành chính) — cần xác nhận từ data,modeler_defined,NHNCK.qlnhn.Violations.ViolationType,Conduct Violation
 VIOLATION_STATUS,(to_define),Trạng thái vi phạm (Hiệu lực/Không hiệu lực) — cần xác nhận từ data,modeler_defined,NHNCK.qlnhn.Violations.Status,Conduct Violation
 REPORT_TYPE,(to_define),Loại báo cáo — cần xác nhận từ data,modeler_defined,NHNCK.qlnhn.OrganizationReports.Type,Organization Employment Report
+COURSE_STATUS,(to_define),"Trạng thái khóa học (1:HĐ, 0:Không HĐ, -1:Đã xóa)",modeler_defined,NHNCK.qlnhn.SpecializationCourses.Status,Professional Training Class
+TRAINING_RESULT,(to_define),Kết quả đào tạo — cần xác nhận từ data,modeler_defined,NHNCK.qlnhn.SpecializationCourseDetails.Result,Professional Training Class Enrollment
+EXAMINATION_STATUS,(to_define),Trạng thái đợt thi (Khởi tạo/Đang thực hiện/Hoàn thành),modeler_defined,NHNCK.qlnhn.ExamSessions.Status,Qualification Examination Assessment
+EXAMINATION_RESULT,(to_define),Kết quả thi (Đạt/Không đạt/Chưa thi),modeler_defined,NHNCK.qlnhn.ExamDetails.Result,Qualification Examination Assessment Result
+ORGANIZATION_TYPE,(to_define),"Loại tổ chức (1:CTCK, 2:QLQ, 3:NH, 4:Khác)",modeler_defined,NHNCK.qlnhn.Organizations.OrganizationTypeId,Securities Organization Reference
+ORGANIZATION_LEVEL,(to_define),Cấp độ tổ chức,modeler_defined,NHNCK.qlnhn.Organizations.Level,Securities Organization Reference
+ORGANIZATION_STATUS,(to_define),Trạng thái tổ chức,modeler_defined,NHNCK.qlnhn.Organizations.Status,Securities Organization Reference
+SYNC_STATUS,(to_define),Trạng thái đồng bộ,modeler_defined,NHNCK.qlnhn.Organizations.SyncStatus,Securities Organization Reference
+DECISION_TYPE,(to_define),Loại quyết định,modeler_defined,NHNCK.qlnhn.Decisions.TypeId,License Decision Document
+DECISION_STATUS,(to_define),Trạng thái quyết định,modeler_defined,NHNCK.qlnhn.Decisions.Status,License Decision Document
+ORGANIZATION_UNIT_TYPE,UNIT,Đơn vị,etl_derived,,Regulatory Authority Organization Unit
+ORGANIZATION_UNIT_TYPE,DEPARTMENT,Phòng ban,etl_derived,,Regulatory Authority Organization Unit
+ORGANIZATION_UNIT_STATUS,(to_define),Trạng thái đơn vị/phòng ban,modeler_defined,NHNCK.qlnhn.Units.Status,Regulatory Authority Organization Unit
+OFFICER_STATUS,(to_define),Trạng thái người dùng,modeler_defined,NHNCK.qlnhn.Users.Status,Regulatory Authority Officer
+IP_ELEC_ADDR_TYPE,MOBILE,Số di động,etl_derived,,IP Electronic Address
