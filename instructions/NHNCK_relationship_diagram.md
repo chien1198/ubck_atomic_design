@@ -30,6 +30,7 @@ graph LR
     Professionals["**Professionals**\nNgười hành nghề\n(Nhóm B)"]:::outscope
     CertificateRecords["**CertificateRecords**\nChứng chỉ hành nghề\n(Nhóm B)"]:::outscope
     ExamSessions["**ExamSessions**\nĐợt thi sát hạch\n(Nhóm C)"]:::outscope
+    Users["**Users**\nNgười dùng hệ thống\n(Nhóm E)"]:::outscope
 
     ApplicationSpecializations -->|ApplicationId| Applications
     ApplicationDocuments -->|ApplicationId| Applications
@@ -40,7 +41,9 @@ graph LR
     Applications -->|ProfessionalId| Professionals
     Applications -->|CertificateRecordId| CertificateRecords
     Applications -->|ExamSessionId| ExamSessions
+    Applications -->|AssigneeId| Users
     Applications -->|InfoVerifyId| VerifyApplicationStatuses
+    VerifyApplicationStatuses -->|VerifyBy| Users
 ```
 
 ### Silver — Proposed Model (Nhóm A)
@@ -61,6 +64,7 @@ graph LR
     PRACTITIONER["**Securities Practitioner**\n(Nhóm B)"]:::outscope
     CERTDOC["**Securities Practitioner\nLicense Certificate Document**\n(Nhóm B)"]:::outscope
     EXAM["**Securities Practitioner\nQualification Examination Assessment**\n(Nhóm C)"]:::outscope
+    OFFICER["**Regulatory Authority Officer**\n(Nhóm E)"]:::outscope
 
     TRAINING -->|FK: Application Identifier| APP
     DOCATTACH -->|FK: Application Identifier| APP
@@ -71,6 +75,8 @@ graph LR
     APP -->|Practitioner Identifier| PRACTITIONER
     APP -->|License Certificate Identifier| CERTDOC
     APP -->|Examination Assessment Identifier| EXAM
+    APP -->|Assignee Officer Identifier| OFFICER
+    VERIFY -->|Verify Officer Identifier| OFFICER
 ```
 
 ---
@@ -233,8 +239,11 @@ graph LR
     Decisions["**Decisions**\nDanh mục các quyết định hành chính"]:::src
     Units["**Units**\nDanh mục đơn vị"]:::src
     Departments["**Departments**\nDanh mục phòng ban"]:::src
+    Users["**Users**\nThông tin người dùng hệ thống"]:::src
 
     Departments -->|UnitId| Units
+    Users -->|UnitId| Units
+    Users -->|DepartmentId| Departments
 ```
 
 ### Silver — Proposed Model (Nhóm E)
@@ -246,16 +255,20 @@ graph LR
     SECORG["**Securities Organization Reference**\n[Involved Party] Organization\nTổ chức tham gia TTCK"]:::silver
     REGDECISION["**Securities Practitioner\nLicense Decision Document**\n[Documentation] Gov. Registration Document\nQuyết định cơ quan nhà nước"]:::silver
     REGORGUNIT["**Regulatory Authority\nOrganization Unit**\n[Involved Party] Organization\nĐơn vị + Phòng ban UBCKNN (gộp)"]:::silver
+    OFFICER["**Regulatory Authority Officer**\n[Involved Party] Individual\nCán bộ xử lý UBCKNN"]:::silver
 
     REGORGUNIT -->|Parent Organization Unit Identifier - self ref| REGORGUNIT
+    OFFICER -->|Organization Unit Identifier| REGORGUNIT
 ```
 
 > **Lưu ý Nhóm E:**
 > - **Classification Value** (7 danh mục): `EducationLevels`, `ApplicationStatuses`, `Certificates`, `Specializations`, `Documents`, `ApplicationSources`, `Positions` — bảng danh mục đơn giản (code-name). ETL load vào `Silver.Classification_Value` với scheme tương ứng. Không xuất hiện trong diagram theo quy tắc HLD.
+> - **`Positions` → Classification Value scheme "Employment Position Type"**: Theo định nghĩa BCV, Employment Position là một vị trí việc làm cụ thể trong tổ chức (instance có người đảm nhận). Bảng `Positions` trong NHNCK chỉ chứa danh sách chức danh (Chuyên viên, Trưởng phòng...) — đây là **Employment Position Type** (reference data set), không phải Employment Position entity. Do đó map vào Classification Value, không tạo Silver entity riêng.
 > - **Securities Organization Reference** (`Organizations`): entity nghiệp vụ phong phú (CharterCapital, LicenseNumber, Website...), được FK từ nhiều bảng → tạo Silver entity riêng.
 > - **Securities Practitioner License Decision Document** (`Decisions`): entity nghiệp vụ thực (TypeId, SoQuyetDinh, NgayKy, NguoiKy...), được FK từ Nhóm A, B, C → tạo Silver entity riêng.
 > - **Regulatory Authority Organization Unit** (`Units` + `Departments` gộp): cơ cấu tổ chức UBCKNN, cấu trúc tương tự, số trường ít → gộp thành 1 entity dạng cây (self-referencing) với Classification Value phân biệt cấp (Unit / Department). Dùng làm dimension cho báo cáo.
-> - **Bảng không lên Silver:** `Users`, `UserRoles`, `Roles`, `Permissions`, `PermissionRoles`, `DepartmentAccess`, `ActionLogs`, `SystemParameters`, `DigitalCertificates`, `DigitalCertificateUsers`, `CertificateDocuments`, `CertificateSpecializations`, `CertificateDepartments`, `CertificateNumberTemplates` — operational / system data.
+> - **Regulatory Authority Officer** (`Users`): cán bộ xử lý hồ sơ UBCKNN. Được FK từ Nhóm A (AssigneeId, VerifyBy) và nhiều bảng khác (CreatedBy). FK → Organization Unit. Trường chức vụ dùng Classification Value "Employment Position Type Code" (không FK entity riêng). Không bao gồm thông tin xác thực (PasswordHash) trên Silver.
+> - **Bảng không lên Silver:** `UserRoles`, `Roles`, `Permissions`, `PermissionRoles`, `DepartmentAccess`, `ActionLogs`, `SystemParameters`, `DigitalCertificates`, `DigitalCertificateUsers`, `CertificateDocuments`, `CertificateSpecializations`, `CertificateDepartments`, `CertificateNumberTemplates` — operational / system data.
 
 ---
 
@@ -303,15 +316,15 @@ graph LR
 
 **Classification Value** (load vào `Silver.Classification_Value`):
 
-| Source Tables | Mô tả bảng nguồn | Classification Scheme |
-|---|---|---|
-| EducationLevels | Danh mục trình độ học vấn | Education Level |
-| ApplicationStatuses | Định nghĩa các trạng thái của hồ sơ | Application Status |
-| Certificates | Danh mục các loại chứng chỉ hành nghề | Certificate Type |
-| Specializations | Danh mục chuyên môn/chứng chỉ chuyên môn | Specialization |
-| Documents | Danh mục tài liệu liên quan đến hồ sơ hoặc chứng chỉ | Document Type |
-| ApplicationSources | Hình thức nộp hồ sơ | Application Source |
-| Positions | Danh mục chức vụ | Position |
+| Source Tables | Mô tả bảng nguồn | Classification Scheme | Ghi chú BCV |
+|---|---|---|---|
+| EducationLevels | Danh mục trình độ học vấn | Education Level | |
+| ApplicationStatuses | Định nghĩa các trạng thái của hồ sơ | Application Status | |
+| Certificates | Danh mục các loại chứng chỉ hành nghề | Certificate Type | |
+| Specializations | Danh mục chuyên môn/chứng chỉ chuyên môn | Specialization | |
+| Documents | Danh mục tài liệu liên quan đến hồ sơ hoặc chứng chỉ | Document Type | |
+| ApplicationSources | Hình thức nộp hồ sơ | Application Source | |
+| Positions | Danh mục chức vụ | Employment Position Type | BCV reference data set: "Distinguishes between Employment Positions according to the nature of the position which may be the specific label or job title assigned to an incumbent" |
 
 **Silver Entities:**
 
@@ -320,6 +333,7 @@ graph LR
 | **[Involved Party] Organization** | Organizations | Thông tin các tổ chức (CTCK, QLQ, Ngân hàng, ...) | Securities Organization Reference |
 | **[Documentation] Gov. Registration Document** | Decisions | Danh mục các quyết định hành chính | Securities Practitioner License Decision Document |
 | **[Involved Party] Organization** | Units + Departments | Đơn vị + Phòng ban UBCKNN (gộp — cấu trúc tương tự, số trường ít) | Regulatory Authority Organization Unit |
+| **[Involved Party] Individual** | Users | Thông tin người dùng hệ thống | Regulatory Authority Officer |
 
 ### Shared Entities
 

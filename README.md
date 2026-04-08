@@ -26,8 +26,9 @@ Silver
 │   │   ├── attr_TCT_TTCCN_HOA_DON.xlsx
 │   │   └── attr_HOA_DON_CHI_TIET.xlsx
 │   └── (source khác)/                    # Mở rộng khi có thêm source system
-├── templates/
-│   └── attr_template.xlsx                # Template chuẩn cho file LLD
+├── system/
+│   ├── templates/
+│   │   ├── attr_template.xlsx                # Template chuẩn cho file LLD
 └── README.md
 ```
 

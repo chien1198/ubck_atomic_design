@@ -1,0 +1,3 @@
+﻿attribute_name,description,data_domain,nullable,is_primary_key,status,source_columns,comment
+example_col,Mô tả cột,Text,true,false,draft,MSS.dbo.investor_account.account_code,Ghi chú nếu có (chỉ 1 comment)
+example_col2,Nhiều source,Small Counter,,,draft,MSS.dbo.tbl.col1|MSS.dbo.tbl.col2,
