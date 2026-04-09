@@ -8,8 +8,11 @@ import os, json, shutil, requests
 from pathlib import Path
 
 WORKER_BASE = os.environ["WORKER_BASE_URL"]           # https://datamodel-worker.linhlv-it.workers.dev
-CLIENT_IDS  = os.environ.get("CLIENT_IDS", "").split(",")
-LAYERS      = os.environ.get("LAYERS", "").split(",")
+CLIENT_IDS  = [x.strip() for x in os.environ.get("CLIENT_IDS", "").split(",") if x.strip()]
+LAYERS      = [x.strip() for x in os.environ.get("LAYERS",     "").split(",") if x.strip()]
+
+print(f"CLIENT_IDS={CLIENT_IDS}")
+print(f"LAYERS={LAYERS}")
 
 OUT_DIR = Path("docs/approved")
 shutil.rmtree(OUT_DIR, ignore_errors=True)   # rebuild sạch mỗi lần chạy
@@ -17,8 +20,8 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 manifest = []
 
-for client_id in [c.strip() for c in CLIENT_IDS if c.strip()]:
-    for layer in [l.strip() for l in LAYERS if l.strip()]:
+for client_id in CLIENT_IDS:
+    for layer in LAYERS:
         url = f"{WORKER_BASE}/{client_id}/{layer}/csv-reviews"
         try:
             r = requests.get(url, timeout=15)
