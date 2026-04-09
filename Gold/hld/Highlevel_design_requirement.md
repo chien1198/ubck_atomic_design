@@ -1,4 +1,4 @@
-1.Objective
+1. Objective
 
 Thiết kế danh sách các bảng (fact/dimension) cho datamart trong lĩnh vực chứng khoán, đảm bảo rõ grain, nguồn dữ liệu và ý nghĩa nghiệp vụ.
 
