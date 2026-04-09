@@ -12,6 +12,7 @@ IP_ELEC_ADDR_TYPE,FAX_BUSINESS,Fax kinh doanh,etl_derived,,IP Electronic Address
 IP_ELEC_ADDR_TYPE,PHONE,Điện thoại,etl_derived,,IP Electronic Address
 IP_ELEC_ADDR_TYPE,FAX,Fax,etl_derived,,IP Electronic Address
 IP_ELEC_ADDR_TYPE,EMAIL,Email,etl_derived,,IP Electronic Address
+IP_ELEC_ADDR_TYPE,MOBILE,Số di động,etl_derived,,IP Electronic Address
 IP_ADDR_TYPE,HEAD_OFFICE,Địa chỉ trụ sở chính,etl_derived,,IP Postal Address
 IP_ADDR_TYPE,BUSINESS,Địa chỉ kinh doanh,etl_derived,,IP Postal Address
 IP_ADDR_TYPE,PERMANENT,Nơi thường trú,etl_derived,,IP Postal Address
@@ -60,4 +61,18 @@ ORGANIZATION_UNIT_TYPE,UNIT,Đơn vị,etl_derived,,Regulatory Authority Organiz
 ORGANIZATION_UNIT_TYPE,DEPARTMENT,Phòng ban,etl_derived,,Regulatory Authority Organization Unit
 ORGANIZATION_UNIT_STATUS,(to_define),Trạng thái đơn vị/phòng ban,modeler_defined,NHNCK.qlnhn.Units.Status,Regulatory Authority Organization Unit
 OFFICER_STATUS,(to_define),Trạng thái người dùng,modeler_defined,NHNCK.qlnhn.Users.Status,Regulatory Authority Officer
-IP_ELEC_ADDR_TYPE,MOBILE,Số di động,etl_derived,,IP Electronic Address
+TAXPAYER_ACTIVITY_STATUS,00,Đang hoạt động,etl_derived,DCST.THONG_TIN_DK_THUE.TRANG_THAI_HOAT_DONG,Registered Taxpayer
+TAXPAYER_ACTIVITY_STATUS,01,Ngừng HĐ đã hoàn thành thủ tục chấm dứt hiệu lực MST,etl_derived,DCST.THONG_TIN_DK_THUE.TRANG_THAI_HOAT_DONG,Registered Taxpayer
+TAXPAYER_ACTIVITY_STATUS,03,Ngừng HĐ chưa hoàn thành thủ tục chấm dứt hiệu lực MST,etl_derived,DCST.THONG_TIN_DK_THUE.TRANG_THAI_HOAT_DONG,Registered Taxpayer
+TAXPAYER_ACTIVITY_STATUS,04,Đang hoạt động,etl_derived,DCST.THONG_TIN_DK_THUE.TRANG_THAI_HOAT_DONG,Registered Taxpayer
+TAXPAYER_ACTIVITY_STATUS,05,Ngừng kinh doanh có thời hạn,etl_derived,DCST.THONG_TIN_DK_THUE.TRANG_THAI_HOAT_DONG,Registered Taxpayer
+TAXPAYER_ACTIVITY_STATUS,06,Không hoạt động tại địa chỉ đã đăng ký,etl_derived,DCST.THONG_TIN_DK_THUE.TRANG_THAI_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,1,Giải thể,etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,2,Phá sản,etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,3,"Chuyển đổi loại hình DN, tổ chức sắp xếp loại DN",etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,4,Cho làm thủ tục giải thể,etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,5,Cho làm thủ tục phá sản,etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,6,Cho làm thủ tục tổ chức lại tổ chức kinh tế,etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,7,Bị thu hồi giấy phép hoạt động,etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,8,Đóng theo đơn vị chủ quản (MST 13 số),etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
+TAXPAYER_CESSATION_TYPE,9,Khác,etl_derived,DCST.THONG_TIN_DK_THUE.LOAI_NGUNG_HOAT_DONG,Registered Taxpayer
