@@ -1,4 +1,4 @@
- 1. Objective
+1. Objective
 
 Mapping giữa Dashboard/Report/Data Explorer với Datamart.
 

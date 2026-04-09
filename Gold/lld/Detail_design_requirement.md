@@ -1,4 +1,4 @@
- 1. Objective
+ 1.Objective
 
 Thiết kế chi tiết cấu trúc bảng (column-level) cho datamart, bám sát high-level design và phục vụ triển khai ETL.
 

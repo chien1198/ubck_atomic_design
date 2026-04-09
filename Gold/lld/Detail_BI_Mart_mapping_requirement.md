@@ -1,4 +1,4 @@
- 1. Objective
+ 1.Objective
 
 Mapping chỉ tiêu báo cáo với Datamart ở mức column.
 
