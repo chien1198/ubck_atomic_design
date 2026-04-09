@@ -1,38 +1,38 @@
 # DCST — Relationship Diagram: Source vs Silver Proposed Model
 
-> **Hệ thống nguồn:** DCST (Dữ liệu Cơ quan Thuế — Tổng cục Thuế)
-> **Domain:** Thông tin đăng ký thuế, báo cáo tài chính, cưỡng chế nợ thuế, xử lý vi phạm thuế
+> **He thong nguon:** DCST (Du lieu Co quan Thue — Tong cuc Thue)
+> **Domain:** Thong tin dang ky thue, bao cao tai chinh, cuong che no thue, xu ly vi pham thue
+> **Ngay:** 09/04/2026
 >
-> **Render:** Mở file này trong VS Code với extension **Markdown Preview Mermaid Support**, hoặc dán từng block vào [mermaid.live](https://mermaid.live).
+> **Render:** Mo file nay trong VS Code voi extension **Markdown Preview Mermaid Support**, hoac dan tung block vao [mermaid.live](https://mermaid.live).
 >
-> **Ký hiệu:**
-> - `──►` (mũi tên liền): quan hệ FK (Many → One)
-> - `-.->` (mũi tên đứt): liên kết ngầm qua MST (không có FK khai báo)
-> - 🔵 Xanh dương: bảng nguồn DCST
-> - 🟢 Xanh lá: entity Silver / Proposed Model
-> - 🟡 Vàng: bảng ngoài scope
-> - 🟣 Tím: Shared entity (dùng chung cho mọi Involved Party)
+> **Ky hieu:**
+> - Mui ten lien (-->): quan he FK (Many to One)
+> - Mui ten dut (-.->): lien ket ngam qua MST (khong co FK khai bao)
+> - Xanh duong: bang nguon DCST
+> - Xanh la: entity Silver
+> - Tim: Shared entity (dung chung cho moi Involved Party)
 
 ---
 
-## Nhóm 1 — Taxpayer Registration (Tổ chức/DN đăng ký thuế)
+## Nhom 1 — Taxpayer Registration (To chuc/DN dang ky thue)
 
 ### Source (DCST)
 
-> **Không có FK khai báo** giữa các bảng trong source. Liên kết thực tế:
-> - `TTKDT_NGUOI_DAI_DIEN.THONG_TIN_DK_THUE_ID` → FK thực đến `THONG_TIN_DK_THUE.ID`
-> - `DN_RUI_RO_CAO.MA_SO_DOANH_NGHIEP` ↔ `THONG_TIN_DK_THUE.MA_SO_THUE` (liên kết ngầm qua MST)
+> **Lien ket thuc te:**
+> - `TTKDT_NGUOI_DAI_DIEN.THONG_TIN_DK_THUE_ID` → FK thuc den `THONG_TIN_DK_THUE.ID`
+> - `DN_RUI_RO_CAO.MA_SO_DOANH_NGHIEP` ↔ `THONG_TIN_DK_THUE.MA_SO_THUE` (lien ket ngam qua MST)
 
 ```mermaid
 graph LR
     classDef src fill:#dbeafe,stroke:#2563eb,color:#1e3a5f
 
-    THUE["**THONG_TIN_DK_THUE**\nThông tin đăng ký thuế\ncủa tổ chức/DN nộp thuế"]:::src
-    NGUOIDAIDIEN["**TTKDT_NGUOI_DAI_DIEN**\nNgười đại diện của\ntổ chức/DN nộp thuế"]:::src
-    RUIRO["**DN_RUI_RO_CAO**\nDoanh nghiệp rủi ro cao\n(đánh giá hàng năm)"]:::src
+    THUE[THONG_TIN_DK_THUE]:::src
+    NGUOIDAIDIEN[TTKDT_NGUOI_DAI_DIEN]:::src
+    RUIRO[DN_RUI_RO_CAO]:::src
 
     NGUOIDAIDIEN -->|THONG_TIN_DK_THUE_ID| THUE
-    RUIRO -.->|MST = MA_SO_THUE\n(liên kết ngầm)| THUE
+    RUIRO -.->|MST lien ket ngam| THUE
 ```
 
 ### Silver — Proposed Model
@@ -42,12 +42,12 @@ graph LR
     classDef silver fill:#dcfce7,stroke:#16a34a,color:#14532d
     classDef shared fill:#fae8ff,stroke:#9333ea,color:#4a044e
 
-    TAXREG["**Registered Taxpayer**\nTổ chức/DN đăng ký thuế\nvới Tổng cục Thuế"]:::silver
-    REP["**Taxpayer Representative**\nNgười đại diện pháp lý\ncủa DN nộp thuế"]:::silver
-    HRISK["**High Risk Taxpayer Assessment**\nĐánh giá rủi ro thuế\nhàng năm từ TCT"]:::silver
-    ADDR["**Involved Party Postal Address**\nĐịa chỉ trụ sở & kinh doanh\n(dùng chung)"]:::shared
-    EADDR["**Involved Party Electronic Address**\nĐiện thoại / Fax / Email\n(dùng chung)"]:::shared
-    ALTID["**Involved Party Alternative Identification**\nGiấy phép / Quyết định thành lập\n(dùng chung)"]:::shared
+    REP[Taxpayer Representative]:::silver
+    TAXREG[Registered Taxpayer]:::silver
+    HRISK[High Risk Taxpayer Assessment]:::silver
+    ADDR[IP Postal Address]:::shared
+    EADDR[IP Electronic Address]:::shared
+    ALTID[IP Alt Identification]:::shared
 
     REP --> TAXREG
     HRISK -.->|MST| TAXREG
@@ -58,15 +58,17 @@ graph LR
     REP --> EADDR
 ```
 
-> **Shared Entities (tím):** `Involved Party Postal Address`, `Involved Party Electronic Address`, `Involved Party Alternative Identification` — dùng chung.
+> **Shared Entities (tim):** `IP Postal Address`, `IP Electronic Address`, `IP Alt Identification` — dung chung.
 >
-> **Liên kết ngầm MST:** `High Risk Taxpayer Assessment.Organization Tax Identification Number` → ETL JOIN với `Registered Taxpayer.Organization Tax Identification Number` để resolve FK.
+> **Lien ket ngam MST:** `High Risk Taxpayer Assessment.Organization Tax Identification Number` → ETL JOIN voi `Registered Taxpayer.Organization Tax Identification Number` de resolve FK.
 >
-> **Hai loại địa chỉ trong THONG_TIN_DK_THUE:** `DIA_CHI_TSC` (trụ sở chính) + `MOTA_DIACHI_KD`+mã tỉnh/huyện/xã (kinh doanh) → 2 dòng trong `Involved Party Postal Address` với Address Type = HEAD_OFFICE / BUSINESS.
+> **Hai loai dia chi trong THONG_TIN_DK_THUE:** `DIA_CHI_TSC` (tru so chinh) + `MOTA_DIACHI_KD`+ma tinh/huyen/xa (kinh doanh) → 2 dong trong `IP Postal Address` voi Address Type = HEAD_OFFICE / BUSINESS.
+>
+> **TTKDT_NGUOI_DAI_DIEN:** FK thuc qua THONG_TIN_DK_THUE_ID → Taxpayer Representative tro ve Registered Taxpayer.
 
 ---
 
-## Nhóm 2 — Tax Financial Statement (Tờ khai / Báo cáo tài chính thuế)
+## Nhom 2 — Tax Financial Statement (To khai / Bao cao tai chinh thue)
 
 ### Source (DCST)
 
@@ -74,8 +76,8 @@ graph LR
 graph LR
     classDef src fill:#dbeafe,stroke:#2563eb,color:#1e3a5f
 
-    BAOCAO["**TCT_BAO_CAO**\nTờ khai / Báo cáo tài chính\nnộp lên Tổng cục Thuế"]:::src
-    CHITIET["**TCT_BAO_CAO_CHI_TIET**\nChỉ tiêu BCTC chi tiết\n(EAV — 1 dòng = 1 chỉ tiêu)"]:::src
+    BAOCAO[TCT_BAO_CAO]:::src
+    CHITIET[TCT_BAO_CAO_CHI_TIET]:::src
 
     CHITIET -->|TCT_BAO_CAO_ID| BAOCAO
 ```
@@ -87,39 +89,39 @@ graph LR
     classDef silver fill:#dcfce7,stroke:#16a34a,color:#14532d
     classDef shared fill:#fae8ff,stroke:#9333ea,color:#4a044e
 
-    TFS["**Tax Financial Statement**\nTờ khai / BCTC nộp TCT\n(header thông tin nộp)"]:::silver
-    TFSI["**Tax Financial Statement Item**\nChỉ tiêu BCTC chi tiết\n(EAV — 1 dòng = 1 chỉ tiêu)"]:::silver
-    ADDR2["**Involved Party Postal Address**\nĐịa chỉ NNT trong tờ khai\n(dùng chung)"]:::shared
-    EADDR2["**Involved Party Electronic Address**\nĐiện thoại / Fax / Email NNT\n(dùng chung)"]:::shared
+    TFS[Tax Financial Statement]:::silver
+    TFSI[Tax Financial Statement Item]:::silver
+    ADDR2[IP Postal Address]:::shared
+    EADDR2[IP Electronic Address]:::shared
 
     TFSI --> TFS
     TFS --> ADDR2
     TFS --> EADDR2
 ```
 
-> **Địa chỉ trong TCT_BAO_CAO** là snapshot tại thời điểm nộp tờ khai — load vào `Involved Party Postal Address` với timestamp của tờ khai.
+> **Wide table pattern:** TCT_BAO_CAO_CHI_TIET co nhieu cot so lieu (SO_CUOI_NAM, SO_DAU_NAM, NAM_NAY, NAM_TRUOC, SO_DU_*, SO_TANG_*, SO_GIAM_*) — giu nguyen dang wide table, khong pivot.
 >
-> **EAV pattern (TCT_BAO_CAO_CHI_TIET):** Nhiều cột số liệu (SO_CUOI_NAM, SO_DAU_NAM, NAM_NAY...) là các chiều giá trị khác nhau của cùng 1 chỉ tiêu — giữ nguyên dạng wide table trong Silver, không pivot thành narrow EAV.
+> **Snapshot dia chi:** Dia chi/lien lac NNT trong TCT_BAO_CAO la snapshot tai thoi diem nop → load vao IP Postal Address / IP Electronic Address voi timestamp.
 
 ---
 
-## Nhóm 3 — Tax Enforcement & Violation (Cưỡng chế nợ & xử lý vi phạm thuế)
+## Nhom 3 — Tax Enforcement & Violation (Cuong che no & xu ly vi pham thue)
 
 ### Source (DCST)
+
+> **Khong co FK** giua TCT_TT_CUONG_CHE_NO, TT_XLY_VI_PHAM, TCT_TTCCN_HOA_DON. Lien ket ngam qua `MA_NNHAN`/`MST`.
 
 ```mermaid
 graph LR
     classDef src fill:#dbeafe,stroke:#2563eb,color:#1e3a5f
 
-    CUONGCHE["**TCT_TT_CUONG_CHE_NO**\nQuyết định cưỡng chế nợ thuế\n(tài khoản NH, kê biên tài sản...)"]:::src
-    VIPHAM["**TT_XLY_VI_PHAM**\nQuyết định xử lý vi phạm\npháp luật về thuế"]:::src
-    HOADON["**TCT_TTCCN_HOA_DON**\nQuyết định cưỡng chế nợ\nthông qua hóa đơn"]:::src
-    HOADON_CT["**HOA_DON_CHI_TIET**\nDanh sách hóa đơn\nbị đình chỉ"]:::src
+    CUONGCHE[TCT_TT_CUONG_CHE_NO]:::src
+    VIPHAM[TT_XLY_VI_PHAM]:::src
+    HOADON[TCT_TTCCN_HOA_DON]:::src
+    HOADON_CT[HOA_DON_CHI_TIET]:::src
 
     HOADON_CT -->|TCT_TTCCN_HOA_DON_ID| HOADON
 ```
-
-> **Không có FK** giữa `TCT_TT_CUONG_CHE_NO`, `TT_XLY_VI_PHAM` và `TCT_TTCCN_HOA_DON`. Các bảng này liên kết ngầm qua `MA_NNHAN`/`MST` (mã số thuế đối tượng bị xử lý).
 
 ### Silver — Proposed Model
 
@@ -127,31 +129,86 @@ graph LR
 graph LR
     classDef silver fill:#dcfce7,stroke:#16a34a,color:#14532d
 
-    TDEO["**Tax Debt Enforcement Order**\nQuyết định cưỡng chế nợ thuế\n(tài khoản NH, kê biên TS, thu nhập)"]:::silver
-    TVPD["**Tax Violation Penalty Decision**\nQuyết định xử lý vi phạm\npháp luật về thuế"]:::silver
-    TIEO["**Tax Invoice Enforcement Order**\nQuyết định cưỡng chế nợ\nthông qua hóa đơn"]:::silver
-    TIEI["**Tax Invoice Enforcement Item**\nHóa đơn bị đình chỉ\ntheo quyết định CC"]:::silver
+    TDEO[Tax Debt Enforcement Order]:::silver
+    TVPD[Tax Violation Penalty Decision]:::silver
+    TIEO[Tax Invoice Enforcement Order]:::silver
+    TIEI[Tax Invoice Enforcement Item]:::silver
 
     TIEI --> TIEO
 ```
 
-> **Liên kết với Tax Registration:** `TDEO.Taxpayer Tax Number`, `TVPD.Organization Tax Identification Number`, `TIEO.Taxpayer Tax Number` đều liên kết ngầm với `Registered Taxpayer.Organization Tax Identification Number` qua MST — ETL JOIN để resolve.
+> **Lien ket voi Taxpayer Registration:** `TDEO.Taxpayer Tax Number`, `TVPD.Organization Tax Identification Number`, `TIEO.Taxpayer Tax Number` deu lien ket ngam voi `Registered Taxpayer.Organization Tax Identification Number` qua MST — ETL JOIN de resolve.
 
 ---
 
-## Tổng quan theo BCV Concept
+## Tong quan BCV Concept
 
-| BCV Concept | Source Tables | Silver Entities |
+| BCV Concept | Category | Source Table | Silver Entity | Model Table Type | Ghi chu |
+|---|---|---|---|---|---|
+| [Involved Party] | Organization | THONG_TIN_DK_THUE | Registered Taxpayer | Fundamental (SCD4A) | ~50 truong |
+| [Involved Party] | Involved Party | TTKDT_NGUOI_DAI_DIEN | Taxpayer Representative | Fundamental (SCD4A) | 10 truong |
+| [Involved Party] | Organization | DN_RUI_RO_CAO | High Risk Taxpayer Assessment | Fundamental (SCD4A) | 7 truong |
+| [Documentation] | Regulatory Report | TCT_BAO_CAO | Tax Financial Statement | Fundamental (SCD4A) | ~57 truong |
+| [Documentation] | Reported Information | TCT_BAO_CAO_CHI_TIET | Tax Financial Statement Item | Fundamental (SCD4A) | 28 truong, wide table |
+| [Documentation] | Regulatory Report | TCT_TT_CUONG_CHE_NO | Tax Debt Enforcement Order | Fundamental (SCD4A) | 28 truong |
+| [Business Activity] | Conduct Violation | TT_XLY_VI_PHAM | Tax Violation Penalty Decision | Activity (Fact Append) | 10 truong |
+| [Documentation] | Invoice | TCT_TTCCN_HOA_DON | Tax Invoice Enforcement Order | Fundamental (SCD4A) | ~25 truong |
+| [Documentation] | Invoice | HOA_DON_CHI_TIET | Tax Invoice Enforcement Item | Fundamental (SCD4A) | 6 truong |
+
+### Shared Entities (dung chung — khong rieng DCST)
+
+| BCV Concept | Category | Source Tables | Silver Entity | Ghi chu |
+|---|---|---|---|---|
+| [Location] | Postal Address | THONG_TIN_DK_THUE, TCT_BAO_CAO | IP Postal Address | HEAD_OFFICE, BUSINESS, snapshot to khai |
+| [Location] | Electronic Address | THONG_TIN_DK_THUE, TTKDT_NGUOI_DAI_DIEN, TCT_BAO_CAO | IP Electronic Address | Phone, Fax, Email |
+| [Involved Party] | Alternative Identification | THONG_TIN_DK_THUE, TTKDT_NGUOI_DAI_DIEN | IP Alt Identification | GPKD, QD thanh lap, CMND/CCCD/Ho chieu |
+
+### Danh muc & Tham chieu (Reference Data → Classification Value)
+
+| Source Table | Mo ta | Xu ly tren Silver |
 |---|---|---|
-| **[Involved Party] — Organization** | THONG_TIN_DK_THUE | Registered Taxpayer |
-| **[Involved Party] — Involved Party** | TTKDT_NGUOI_DAI_DIEN | Taxpayer Representative |
-| **[Involved Party] — Organization** | DN_RUI_RO_CAO | High Risk Taxpayer Assessment |
-| **[Documentation] — Regulatory Report** | TCT_BAO_CAO | Tax Financial Statement |
-| **[Documentation] — Reported Information** | TCT_BAO_CAO_CHI_TIET | Tax Financial Statement Item |
-| **[Documentation] — Regulatory Report** | TCT_TT_CUONG_CHE_NO | Tax Debt Enforcement Order |
-| **[Business Activity] — Conduct Violation** | TT_XLY_VI_PHAM | Tax Violation Penalty Decision |
-| **[Documentation] — Invoice** | TCT_TTCCN_HOA_DON | Tax Invoice Enforcement Order |
-| **[Documentation] — Invoice** | HOA_DON_CHI_TIET | Tax Invoice Enforcement Item |
-| **[Location] — Postal Address** *(shared)* | THONG_TIN_DK_THUE, TCT_BAO_CAO | Involved Party Postal Address |
-| **[Location] — Electronic Address** *(shared)* | THONG_TIN_DK_THUE, TTKDT_NGUOI_DAI_DIEN, TCT_BAO_CAO | Involved Party Electronic Address |
-| **[Involved Party] — Alternative Identification** *(shared)* | THONG_TIN_DK_THUE (GPKD, QĐ thành lập), TTKDT_NGUOI_DAI_DIEN (CMND/CCCD/Hộ chiếu) | Involved Party Alternative Identification |
+| DANH_MUC + NHOM_DANH_MUC | Danh muc tham chieu dung chung trong DCST | → Classification Value (load theo NHOM_DANH_MUC.MA = Scheme Code) |
+| Gia tri cung trong THONG_TIN_DK_THUE | TRANG_THAI_HOAT_DONG (00-06), LOAI_NGUNG_HOAT_DONG (1-9) | → Classification Value (ETL derive) |
+
+### Bang ngoai scope Silver
+
+| Source Table | Ly do |
+|---|---|
+| GOI_TIN | Bang system — quan ly trang thai truyen nhan goi tin, khong phai du lieu nghiep vu |
+| DANH_MUC, NHOM_DANH_MUC | Reference data → load vao Classification Value, khong tao entity rieng |
+| 6 bang Group B | Du lieu phai sinh, thu thap tu nguon goc (SCMS, FMS, IDS, HT Thanh tra) |
+| 12 bang Group C | Quan tri he thong (user, permission, log, config) |
+
+---
+
+## Scope tong ket
+
+| Nhom | Source Tables | Silver Entities |
+|---|---|---|
+| 1. Taxpayer Registration | 3 (THONG_TIN_DK_THUE, TTKDT_NGUOI_DAI_DIEN, DN_RUI_RO_CAO) | 3 + 3 shared |
+| 2. Tax Financial Statement | 2 (TCT_BAO_CAO, TCT_BAO_CAO_CHI_TIET) | 2 |
+| 3. Tax Enforcement & Violation | 4 (TCT_TT_CUONG_CHE_NO, TT_XLY_VI_PHAM, TCT_TTCCN_HOA_DON, HOA_DON_CHI_TIET) | 4 |
+| Reference Data | 2 (DANH_MUC, NHOM_DANH_MUC) + gia tri cung | → Classification Value |
+| **Tong** | **9 bang nghiep vu + 2 ref data** | **9 entities + 3 shared** |
+
+---
+
+## Ghi chu thiet ke
+
+### 1. GOI_TIN_ID — xu ly tren Silver
+GOI_TIN la bang system quan ly trang thai truyen nhan, khong len Silver. Truong `GOI_TIN_ID` tren cac bang nguon khong map thanh attribute nghiep vu — chi giu o Bronze de truy vet khi can.
+
+### 2. Lien ket ngam MST
+Nhieu bang DCST lien ket ngam qua MST (Ma so thue) thay vi FK khai bao:
+- DN_RUI_RO_CAO.MA_SO_DOANH_NGHIEP ↔ THONG_TIN_DK_THUE.MA_SO_THUE
+- TCT_TT_CUONG_CHE_NO.MA_NNHAN ↔ THONG_TIN_DK_THUE.MA_SO_THUE
+- TT_XLY_VI_PHAM.MST ↔ THONG_TIN_DK_THUE.MA_SO_THUE
+- TCT_TTCCN_HOA_DON.MA_NNHAN ↔ THONG_TIN_DK_THUE.MA_SO_THUE
+- TCT_BAO_CAO.MST ↔ THONG_TIN_DK_THUE.MA_SO_THUE
+→ ETL can resolve cac lien ket nay thanh FK tren Silver (Registered Taxpayer Id + Code).
+
+### 3. Group B — ngoai scope
+6 bang Group B (THONG_TIN_CONG_TY, UBCK_XU_PHAT, CONG_TY_KIEM_TOAN, KIEM_TOAN_VIEN, UBCK_BAO_CAO, UBCK_BAO_CAO_CHI_TIET) ngoai scope DCST. Khi thiet ke cac nguon goc (SCMS, FMS, IDS, HT Thanh tra), can doi chieu lai voi danh sach nay de dam bao coverage.
+
+### 4. Group C — xac nhan khong lien quan
+DON_VI_TRUYEN/DON_VI_NHAN trong GOI_TIN la gia tri cung (NUMBER: 1=TCT, 2=UBCKNN), khong FK den DM_DON_VI. Khong co bang Group A nao FK den bang Group C. → 0 bang Group C vao scope.
