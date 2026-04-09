@@ -22,7 +22,7 @@ Giống High-Level Design
 
  4.2 Physical Table Name
 
-Tên bảng vật lý theo chuẩn
+Tên bảng vật lý theo chuẩn theo tên tiếng anh viết tắt
 
  4.3 Logical Table Name
 
@@ -30,7 +30,7 @@ Tên bảng tiếng Anh đầy đủ
 
  4.4 Physical Column Name
 
-Tên cột viết hoa, dạng snake case
+Tên cột viết hoa theo tên tiếng anh viết tắt, dạng snake case
 
  4.5 Logical Column Name
 
