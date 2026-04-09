@@ -1,0 +1,50 @@
+name: Sync Approved Files
+
+on:
+  # Trigger thủ công từ GitHub UI sau khi review một batch xong
+  workflow_dispatch:
+
+  # Trigger tự động khi có file thiết kế mới được commit
+  push:
+    branches: [main]
+    paths:
+      - "Silver/**"
+      - "Gold/**"
+
+jobs:
+  sync-approved:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run sync script
+        env:
+          WORKER_BASE_URL: ${{ secrets.WORKER_BASE_URL }}
+          CLIENT_IDS: ${{ secrets.APPROVED_CLIENT_IDS }}
+          LAYERS: ${{ secrets.APPROVED_LAYERS }}
+        run: python sync_approved_files.py
+
+      - name: Commit approved snapshot
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/approved/
+          git diff --cached --quiet || git commit -m "chore: sync approved files snapshot [skip ci]"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
