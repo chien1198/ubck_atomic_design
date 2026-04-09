@@ -87,21 +87,16 @@ graph LR
 ```mermaid
 graph LR
     classDef silver fill:#dcfce7,stroke:#16a34a,color:#14532d
-    classDef shared fill:#fae8ff,stroke:#9333ea,color:#4a044e
 
     TFS[Tax Financial Statement]:::silver
     TFSI[Tax Financial Statement Item]:::silver
-    ADDR2[IP Postal Address]:::shared
-    EADDR2[IP Electronic Address]:::shared
 
     TFSI --> TFS
-    TFS --> ADDR2
-    TFS --> EADDR2
 ```
 
 > **Wide table pattern:** TCT_BAO_CAO_CHI_TIET co nhieu cot so lieu (SO_CUOI_NAM, SO_DAU_NAM, NAM_NAY, NAM_TRUOC, SO_DU_*, SO_TANG_*, SO_GIAM_*) — giu nguyen dang wide table, khong pivot.
 >
-> **Snapshot dia chi:** Dia chi/lien lac NNT trong TCT_BAO_CAO la snapshot tai thoi diem nop → load vao IP Postal Address / IP Electronic Address voi timestamp.
+> **Dia chi/lien lac giu denormalized:** Thong tin dia chi va lien lac NNT trong TCT_BAO_CAO co grain theo to khai (1 dong = 1 to khai), khong phai theo NNT → khong tach ra shared entity (IP Postal Address, IP Electronic Address). Giu denormalized tren Tax Financial Statement.
 
 ---
 
@@ -132,7 +127,7 @@ graph LR
     TDEO[Tax Debt Enforcement Order]:::silver
     TVPD[Tax Violation Penalty Decision]:::silver
     TIEO[Tax Invoice Enforcement Order]:::silver
-    TIEI[Tax Invoice Enforcement Item]:::silver
+    TIEI[Tax Invoice Enforcement Order Item]:::silver
 
     TIEI --> TIEO
 ```
@@ -153,14 +148,14 @@ graph LR
 | [Documentation] | Regulatory Report | TCT_TT_CUONG_CHE_NO | Tax Debt Enforcement Order | Fundamental (SCD4A) | 28 truong |
 | [Business Activity] | Conduct Violation | TT_XLY_VI_PHAM | Tax Violation Penalty Decision | Activity (Fact Append) | 10 truong |
 | [Documentation] | Invoice | TCT_TTCCN_HOA_DON | Tax Invoice Enforcement Order | Fundamental (SCD4A) | ~25 truong |
-| [Documentation] | Invoice | HOA_DON_CHI_TIET | Tax Invoice Enforcement Item | Fundamental (SCD4A) | 6 truong |
+| [Documentation] | Invoice | HOA_DON_CHI_TIET | Tax Invoice Enforcement Order Item | Fundamental (SCD4A) | 6 truong |
 
 ### Shared Entities (dung chung — khong rieng DCST)
 
 | BCV Concept | Category | Source Tables | Silver Entity | Ghi chu |
 |---|---|---|---|---|
-| [Location] | Postal Address | THONG_TIN_DK_THUE, TCT_BAO_CAO | IP Postal Address | HEAD_OFFICE, BUSINESS, snapshot to khai |
-| [Location] | Electronic Address | THONG_TIN_DK_THUE, TTKDT_NGUOI_DAI_DIEN, TCT_BAO_CAO | IP Electronic Address | Phone, Fax, Email |
+| [Location] | Postal Address | THONG_TIN_DK_THUE | IP Postal Address | HEAD_OFFICE, BUSINESS |
+| [Location] | Electronic Address | THONG_TIN_DK_THUE, TTKDT_NGUOI_DAI_DIEN | IP Electronic Address | Phone, Fax, Email |
 | [Involved Party] | Alternative Identification | THONG_TIN_DK_THUE, TTKDT_NGUOI_DAI_DIEN | IP Alt Identification | GPKD, QD thanh lap, CMND/CCCD/Ho chieu |
 
 ### Danh muc & Tham chieu (Reference Data → Classification Value)
